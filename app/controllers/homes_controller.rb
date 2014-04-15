@@ -5,20 +5,22 @@ class HomesController < ApplicationController
   # GET /homes
   # GET /homes.json
   def index
-    reddit = open('http://www.reddit.com/r/Eyebleach/.json') { |f| f.read } 
-    data = JSON.parse(reddit)
     imageCount = 0
     pageCount = 0
     #@gifs = ["http://i.imgur.com/AUFDta8.gif", "http://i.imgur.com/u1t7FgH.gif", "http://i.imgur.com/m3i1P.gif", "http://i.imgur.com/VANDhe7.gif", "http://i.imgur.com/0z7pboO.gif", "http://i.imgur.com/NPQJBbp.gif"]
     @gifs = []
 
     while imageCount < 6
+      reddit = open("http://www.reddit.com/r/Eyebleach/.json?limit=100&count=#{pageCount * 25}") { |f| f.read } 
+      puts "#{pageCount * 25}"
+      data = JSON.parse(reddit)
       data["data"]["children"].each do |datum|
-        if /.gif/.match(datum["data"]["url"])
+        if /.gif/.match(datum["data"]["url"]) && datum["data"]["thumbnail"] != "nsfw"
           @gifs << datum["data"]["url"]
           imageCount = imageCount + 1
         end
       end
+      pageCount = pageCount + 1
     end
   end
 

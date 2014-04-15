@@ -1,3 +1,3 @@
 $(window).load ->
   $container = $('#container');
-  $container.masonry columnWidth: 200, itemSelector: '.item'
+  $container.masonry columnWidth: 500, itemSelector: '.item'
