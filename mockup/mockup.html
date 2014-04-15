@@ -1,0 +1,28 @@
+<html>
+<head>
+<title>Share this page to feel good</title>
+<style>
+.item{ width: 25%; }
+.item img { margin: 0 auto; display: block; }
+</style>
+</head>
+<body>
+<div id="container">
+  <div class="item"><img src="http://i.imgur.com/AUFDta8.gif"/></div>
+  <div class="item"><img src="http://i.imgur.com/u1t7FgH.gif"/></div>
+  <div class="item"><img src="http://i.imgur.com/m3i1P.gif"/></div>
+  <div class="item"><img src="http://i.imgur.com/VANDhe7.gif"/></div>
+  <div class="item"><img src="http://i.imgur.com/0z7pboO.gif"/></div>
+  <div class="item"><img src="http://i.imgur.com/NPQJBbp.gif"/></div>
+</div>
+
+<script type="text/javascript" src = "http://masonry.desandro.com/masonry.pkgd.js"></script>
+<script type="text/javascript">
+var container = document.querySelector("#container");
+var msnry = new Masonry(container, {
+    columnWidth: 200,
+    itemSelector: '.item'
+    });
+</script>
+</body>
+</html>
