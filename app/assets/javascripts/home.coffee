@@ -9,10 +9,11 @@ class Tv.Controller
     @dispatcher.on_open = @createUser
     @bindEvents()
 
-  bindEvents: ->
-    #foo
-    #
-  appendMessage: (message) ->
+  bindEvents: =>
+    @dispatcher.bind 'greeting', @appendMessage
+
+  appendMessage: (message) =>
+    console.log(message)
     $('#tv').append message
 
   createUser: =>
