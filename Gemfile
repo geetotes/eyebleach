@@ -32,6 +32,12 @@ group :doc do
 end
 
 gem 'websocket-rails'
+
+group :production, :test do
+  gem 'unicorn'
+  gem 'unicorn-rails'
+end
+
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
 
