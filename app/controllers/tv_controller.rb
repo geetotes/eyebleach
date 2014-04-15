@@ -22,7 +22,9 @@ class TvController < WebsocketRails::BaseController
   end
 
   def client_connected
-    system_msg :greeting, "client #{client_id} connected"
+    image = Base64.encode64(File.open("/home/lee/src/eyebleach/baby-duck.jpg").read)
+    
+    system_msg :greeting, image
     puts "client #{client_id} connected"
   end
 end

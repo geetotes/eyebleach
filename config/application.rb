@@ -3,6 +3,7 @@ require File.expand_path('../boot', __FILE__)
 require 'rails/all'
 require 'open-uri'
 require 'json'
+require 'base64'
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.

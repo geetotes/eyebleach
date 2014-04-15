@@ -3,6 +3,14 @@ jQuery ->
 window.Tv = {}
 
 class Tv.Controller
+  
+  template: (message) ->
+    html =
+      """
+      <img src='data:image/jpg;base64,#{message.msg_body}'/>
+      """
+    $(html)
+
   constructor: (url, useWebSockets) ->
     @messageQueue = []
     @dispatcher = new WebSocketRails(url, useWebSockets)
@@ -14,7 +22,10 @@ class Tv.Controller
 
   appendMessage: (message) =>
     console.log(message)
-    $('#tv').append message
+    imageTemplate = @template(message)
+    $('#tv').append imageTemplate
+    $('#tv').append message.msg_body
+
 
   createUser: =>
     @dispatcher.trigger 'hello'
