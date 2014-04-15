@@ -5,6 +5,8 @@ class HomesController < ApplicationController
   # GET /homes
   # GET /homes.json
   def index
+  end
+  def gallery
     imageCount = 0
     pageCount = 0
     #@gifs = ["http://i.imgur.com/AUFDta8.gif", "http://i.imgur.com/u1t7FgH.gif", "http://i.imgur.com/m3i1P.gif", "http://i.imgur.com/VANDhe7.gif", "http://i.imgur.com/0z7pboO.gif", "http://i.imgur.com/NPQJBbp.gif"]

@@ -15,3 +15,5 @@
 //= require turbolinks
 //= require masonry.pkgd.min.js
 //= require_tree .
+//= require websocket_rails/main
+

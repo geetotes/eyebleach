@@ -31,7 +31,7 @@ group :doc do
   gem 'sdoc', require: false
 end
 
-
+gem 'websocket-rails'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
 
