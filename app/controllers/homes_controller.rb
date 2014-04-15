@@ -5,7 +5,17 @@ class HomesController < ApplicationController
   # GET /homes
   # GET /homes.json
   def index
-    @gifs = ["http://i.imgur.com/AUFDta8.gif", "http://i.imgur.com/u1t7FgH.gif", "http://i.imgur.com/m3i1P.gif", "http://i.imgur.com/VANDhe7.gif", "http://i.imgur.com/0z7pboO.gif", "http://i.imgur.com/NPQJBbp.gif"]
+    reddit = open('http://www.reddit.com/r/Eyebleach/.json') { |f| f.read } 
+    data = JSON.parse(reddit)
+    imageCount = 0
+    #@gifs = ["http://i.imgur.com/AUFDta8.gif", "http://i.imgur.com/u1t7FgH.gif", "http://i.imgur.com/m3i1P.gif", "http://i.imgur.com/VANDhe7.gif", "http://i.imgur.com/0z7pboO.gif", "http://i.imgur.com/NPQJBbp.gif"]
+    @gifs = []
+    data["data"]["children"].each do |datum|
+      if /.gif/.match(datum["data"]["url"])
+        @gifs << datum["data"]["url"]
+        imageCount + 1
+      end
+    end
   end
 
   # GET /homes/1
