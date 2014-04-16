@@ -21,4 +21,5 @@ WebsocketRails::EventMap.describe do
   subscribe :client_disconnected, :to => TvController, :with_method => :client_disconnected
   subscribe :next_frame, :to => TvController, :with_method => :next_frame
   subscribe :change_channel, :to => TvController, :with_method => :change_channel
+  subscribe :get_channels, :to => TvController, :with_method => :get_channels
 end

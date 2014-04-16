@@ -28,10 +28,17 @@ class Tv.Controller
     @dispatcher.bind 'greeting', @appendMessage
     @dispatcher.bind 'next_frame', @nextFrame
     @dispatcher.bind 'channel_info', @drawChannelInfo
+    @dispatcher.bind 'channel_list', @setChannelList
     $('.channel').bind 'click', @changeChannel
 
   drawChannelInfo: (message) =>
     channelTemplate = @template(message)
+
+  setChannelList: (message) =>
+    @channelList = message.channels
+    @currentChannel = @channelList[0]
+    @dispatcher.trigger 'next_frame', {frame_no: 0, channel_name: @currentChannel}
+    console.log('user created')
 
   changeChannel: (event) =>
     event.preventDefault()
@@ -41,7 +48,7 @@ class Tv.Controller
   nextFrame: (message) =>
     console.log($('.frame').length)
     #keep from the dom overfilling with frames
-    while($('.frame').length > 72)
+    while($('.frame').length > message.total_frames)
       $('.frame').first().remove()
     #if ($('.frame').length == 146)
       #$('.frame').remove()
@@ -61,8 +68,7 @@ class Tv.Controller
 
 
   createUser: =>
-    @dispatcher.trigger 'next_frame', {frame_no: 0}
-    console.log('user created')
+    @dispatcher.trigger 'get_channels'
 
 
 jQuery(window).load ->
