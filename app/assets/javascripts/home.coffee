@@ -23,24 +23,15 @@ class Tv.Controller
     $('#next_channel').click @changeChannel
 
   nextFrame: (message) =>
-    console.log(message)
-    if (message == {})
-      @dispatcher.trigger 'next_frame', {frame_no: 0}
-    else
-      frame = @template(message)
-      $('#tv').append frame
-      #get the frame number
-      frame_no = $('.frame').first().data('frame_no')
-      #then increment
-      frame_no = message.frame_no + 1
-      #if(message.frame_no != 0)
-        #$('.frame').last().remove()
-      console.log(frame_no + 'called')
-      @dispatcher.trigger 'next_frame', {frame_no: frame_no}
-      #if(frame_no == 73)
-        #@dispatcher.trigger 'next_frame', {frame_no: 0}
-       # $('.frame').remove()
-      #else
+    if ($('.frame').length == 73)
+      $('.frame').remove()
+    frame = @template(message)
+    $('#tv').append frame
+    #get the frame number
+    frame_no = $('.frame').first().data('frame_no')
+    #then increment
+    frame_no = message.frame_no + 1
+    @dispatcher.trigger 'next_frame', {frame_no: frame_no}
 
   appendMessage: (message) =>
     console.log(message)
