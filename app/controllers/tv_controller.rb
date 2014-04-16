@@ -24,8 +24,9 @@ class TvController < WebsocketRails::BaseController
     end
   end
 
-  def hello
-    puts "hello"
+  def change_channel
+    puts 'changing channel'
+    #need to store current channel in connection data
   end
 
   def client_disconnected

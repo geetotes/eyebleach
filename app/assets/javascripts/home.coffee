@@ -4,10 +4,17 @@ window.Tv = {}
 
 class Tv.Controller
   
-  template: (message) ->
+  frameTemplate: (message) ->
     html =
       """
       <img src='data:image/gif;base64,#{message.msg_body}' class='frame' data-frame_no='#{message.frame_no}'/>
+      """
+    $(html)
+
+  channelTemplate: (message) ->
+    html =
+      """
+      <span>Channel Name: #{message.channel_name}</span>
       """
     $(html)
 
@@ -20,12 +27,25 @@ class Tv.Controller
   bindEvents: =>
     @dispatcher.bind 'greeting', @appendMessage
     @dispatcher.bind 'next_frame', @nextFrame
-    $('#next_channel').click @changeChannel
+    @dispatcher.bind 'channel_info', @drawChannelInfo
+    $('.channel').bind 'click', @changeChannel
+
+  drawChannelInfo: (message) =>
+    channelTemplate = @template(message)
+
+  changeChannel: (event) =>
+    event.preventDefault()
+    @dispatcher.trigger 'change_channel'
+
 
   nextFrame: (message) =>
-    if ($('.frame').length == 73)
-      $('.frame').remove()
-    frame = @template(message)
+    console.log($('.frame').length)
+    #keep from the dom overfilling with frames
+    while($('.frame').length > 72)
+      $('.frame').first().remove()
+    #if ($('.frame').length == 146)
+      #$('.frame').remove()
+    frame = @frameTemplate(message)
     $('#tv').append frame
     #get the frame number
     frame_no = $('.frame').first().data('frame_no')
@@ -35,13 +55,13 @@ class Tv.Controller
 
   appendMessage: (message) =>
     console.log(message)
-    imageTemplate = @template(message)
+    imageTemplate = @frameTemplate(message)
     $('#tv').append imageTemplate
     $('#tv').append message.msg_body
 
 
   createUser: =>
-    @dispatcher.trigger 'start_frame', {frame_no: 0}
+    @dispatcher.trigger 'next_frame', {frame_no: 0}
     console.log('user created')
 
 
