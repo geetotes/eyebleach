@@ -7,7 +7,7 @@ class Tv.Controller
   template: (message) ->
     html =
       """
-      <img src='data:image/jpg;base64,#{message.msg_body}' class='frame' data-frame_no='#{message.frame_no}'/>
+      <img src='data:image/gif;base64,#{message.msg_body}' class='frame' data-frame_no='#{message.frame_no}'/>
       """
     $(html)
 
@@ -21,9 +21,17 @@ class Tv.Controller
     @dispatcher.bind 'greeting', @appendMessage
     @dispatcher.bind 'next_frame', @nextFrame
 
-  nextFrame: =>
+  nextFrame: (message) =>
     frame = @template(message)
-    $('.frame').remove()
+    $('#tv').append frame
+    #get the frame number
+    frame_no = $('.frame').first().data('frame_no')
+    #then increment
+    frame_no = message.frame_no + 1
+    #if(message.frame_no != 0)
+      #$('.frame').last().remove()
+    console.log(frame_no + 'called')
+    @dispatcher.trigger 'next_frame', {frame_no: frame_no}
 
   appendMessage: (message) =>
     console.log(message)
@@ -33,10 +41,10 @@ class Tv.Controller
 
 
   createUser: =>
-    @dispatcher.trigger 'hello'
+    @dispatcher.trigger 'start_frame', {frame_no: 0}
     console.log('user created')
 
 
 jQuery(window).load ->
-  $container = $('#container');
+  $container = $('#container')
   $container.masonry columnWidth: 500, itemSelector: '.item'

@@ -20,4 +20,6 @@ WebsocketRails::EventMap.describe do
   subscribe :client_connected, :to => TvController, :with_method => :client_connected
   subscribe :client_disconnected, :to => TvController, :with_method => :client_disconnected
   subscribe :hello, :to => TvController, :with_method => :hello
+  subscribe :next_frame, :to => TvController, :with_method => :next_frame
+  subscribe :start_frame, :to => TvController, :with_method => :next_frame
 end
