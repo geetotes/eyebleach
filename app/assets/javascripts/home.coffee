@@ -7,7 +7,7 @@ class Tv.Controller
   template: (message) ->
     html =
       """
-      <img src='data:image/jpg;base64,#{message.msg_body}'/>
+      <img src='data:image/jpg;base64,#{message.msg_body}' class='frame' data-frame_no='#{message.frame_no}'/>
       """
     $(html)
 
@@ -19,6 +19,11 @@ class Tv.Controller
 
   bindEvents: =>
     @dispatcher.bind 'greeting', @appendMessage
+    @dispatcher.bind 'next_frame', @nextFrame
+
+  nextFrame: =>
+    frame = @template(message)
+    $('.frame').remove()
 
   appendMessage: (message) =>
     console.log(message)

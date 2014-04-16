@@ -5,16 +5,16 @@ class TvController < WebsocketRails::BaseController
     puts "Session init!"
   end
 
-  def system_msg(ev, msg)
+  def frame_message(ev, msg)
     broadcast_message ev, { 
-      user_name: 'system', 
-      received: Time.now.to_s(:short), 
       msg_body: msg
     }
   end
 
-  def hello
-    puts "hello"
+  #needs to take frame num as param
+  def next_frame(framenum)
+    #image = Base64.encode64(File.open("/home/lee/src/eyebleach/test_images/kitty-#{framenum}.jpg").read)
+    frame_message :new_frame, image
   end
 
   def client_disconnected
@@ -24,7 +24,7 @@ class TvController < WebsocketRails::BaseController
   def client_connected
     image = Base64.encode64(File.open("/home/lee/src/eyebleach/baby-duck.jpg").read)
     
-    system_msg :greeting, image
+    frame_message :greeting, image
     puts "client #{client_id} connected"
   end
 end
