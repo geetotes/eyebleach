@@ -41,7 +41,15 @@ body {
       position: relative;
       top:350px;
       font-size:70px;
-      text-decoration: none;
+      a {
+        text-decoration: none;
+      }
+      a#next_channel {
+        color: green;
+      }
+      a#previous_channel {
+        color: red;
+      }
     }
   }
 
