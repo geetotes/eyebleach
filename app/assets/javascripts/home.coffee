@@ -42,12 +42,21 @@ class Tv.Controller
 
   changeChannel: (event) =>
     event.preventDefault()
-    @dispatcher.trigger 'change_channel'
+    index = @channelList.indexOf(@currentChannel)
+    if @channelList[index + 1] == undefined
+      @currentChannel = @channelList[0]
+    else
+      @currentChannel = @channelList[index + 1]
+    #clear every thing out
+    $('.frame').remove()
+    @dispatcher.trigger 'next_frame', {frame_no: 0, channel_name: @currentChannel}
+#change channel client side, reset fame number (just dispatch the event)
 
 
   nextFrame: (message) =>
-    console.log($('.frame').length)
+    console.log(message.total_frames)
     #keep from the dom overfilling with frames
+    
     while($('.frame').length > message.total_frames)
       $('.frame').first().remove()
     #if ($('.frame').length == 146)
@@ -58,7 +67,7 @@ class Tv.Controller
     frame_no = $('.frame').first().data('frame_no')
     #then increment
     frame_no = message.frame_no + 1
-    @dispatcher.trigger 'next_frame', {frame_no: frame_no}
+    @dispatcher.trigger 'next_frame', {frame_no: frame_no, channel_name: @currentChannel}
 
   appendMessage: (message) =>
     console.log(message)
