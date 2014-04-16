@@ -20,6 +20,7 @@ class Tv.Controller
   bindEvents: =>
     @dispatcher.bind 'greeting', @appendMessage
     @dispatcher.bind 'next_frame', @nextFrame
+    $('#next_channel').click @changeChannel
 
   nextFrame: (message) =>
     console.log(message)
@@ -35,11 +36,11 @@ class Tv.Controller
       #if(message.frame_no != 0)
         #$('.frame').last().remove()
       console.log(frame_no + 'called')
-      if(frame_no == 73)
-        @dispatcher.trigger 'next_frame', {frame_no: 0}
-        $('.frame').remove()
-      else
-        @dispatcher.trigger 'next_frame', {frame_no: frame_no}
+      @dispatcher.trigger 'next_frame', {frame_no: frame_no}
+      #if(frame_no == 73)
+        #@dispatcher.trigger 'next_frame', {frame_no: 0}
+       # $('.frame').remove()
+      #else
 
   appendMessage: (message) =>
     console.log(message)

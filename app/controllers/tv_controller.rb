@@ -14,8 +14,14 @@ class TvController < WebsocketRails::BaseController
 
   #needs to take frame num as param
   def next_frame
-    image = Base64.encode64(File.open("/home/lee/src/eyebleach/test_images/frame#{message[:frame_no]}.gif").read)
-    frame_message :next_frame, image, message[:frame_no]
+    #we should also look at channel number
+    if File.exist?("/home/lee/src/eyebleach/test_images/kitty#{message[:frame_no]}.gif")
+      image = Base64.encode64(File.open("/home/lee/src/eyebleach/test_images/kitty#{message[:frame_no]}.gif").read)
+      frame_message :next_frame, image, message[:frame_no]
+    else
+      image = Base64.encode64(File.open("/home/lee/src/eyebleach/test_images/kitty0.gif").read)
+      frame_message :next_frame, image, 0
+    end
   end
 
   def hello
