@@ -74,8 +74,8 @@ class Tv.Controller
 
 #check for existing channel container
     
-    if ($('#tv').children('.' + message.channel_name).length == 0)
-      $('#tv').append('<div id="' + message.channel_name '"></div>')
+    if ($('#tv').children('#' + message.channel_name).length == 0)
+      $('#tv').append('<div id="' + message.channel_name + '"></div>')
 
     $('#tv').children('#' + message.channel_name).append frame
 

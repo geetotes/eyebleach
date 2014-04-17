@@ -9,8 +9,10 @@ class TvController < WebsocketRails::BaseController
   def create_channel_list
     @channels = {}
     Dir.foreach('/home/lee/src/eyebleach/test_images/') do |filename|
-      if filename.match(/[a-z].gif/) != nil #no digits!!!
+      if filename !~ /[a-z0-9]*frame\d*.gif/i #no frames!!!
+        if filename != "." && filename != ".." #no directories!
         @channels[File.basename("/home/lee/src/eyebleach/test_images/#{filename}", '.gif')] = 0
+        end
       end
     end
     #lets make our lists
@@ -21,7 +23,7 @@ class TvController < WebsocketRails::BaseController
       #re = Regexp.new("#{channel}\d")
       totalFrames = -1
       Dir.foreach('/home/lee/src/eyebleach/test_images/') do |filename|
-        if filename.match(/#{channel}\d*/) != nil
+        if filename.match(/#{channel}-frame\d*/) != nil
           totalFrames += 1
         end
       end
@@ -52,11 +54,11 @@ class TvController < WebsocketRails::BaseController
     create_channel_list
     do_frame_lookup
 
-    if File.exist?("/home/lee/src/eyebleach/test_images/#{message[:channel_name]}#{message[:frame_no]}.gif")
-      image = Base64.encode64(File.open("/home/lee/src/eyebleach/test_images/#{message[:channel_name]}#{message[:frame_no]}.gif").read)
+    if File.exist?("/home/lee/src/eyebleach/test_images/#{message[:channel_name]}-frame#{message[:frame_no]}.gif")
+      image = Base64.encode64(File.open("/home/lee/src/eyebleach/test_images/#{message[:channel_name]}-frame#{message[:frame_no]}.gif").read)
       frame_message :next_frame, image, message[:frame_no], @channels[message[:channel_name]], message[:channel_name]
     else
-      image = Base64.encode64(File.open("/home/lee/src/eyebleach/test_images/#{message[:channel_name]}0.gif").read)
+      image = Base64.encode64(File.open("/home/lee/src/eyebleach/test_images/#{message[:channel_name]}-frame0.gif").read)
       frame_message :next_frame, image, 0, @channels[message[:channel_name]], message[:channel_name]
     end
   end

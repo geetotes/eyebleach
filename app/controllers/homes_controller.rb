@@ -18,7 +18,14 @@ class HomesController < ApplicationController
       data = JSON.parse(reddit)
       data["data"]["children"].each do |datum|
         if /.gif/.match(datum["data"]["url"]) && datum["data"]["thumbnail"] != "nsfw"
-          @gifs << datum["data"]["url"]
+          gif = datum["data"]["url"]
+          @gifs << gif
+          #do processing here
+          `wget #{gif}  -P /home/lee/src/eyebleach/test_images/`
+          puts "GIFFF!!!!! #{gif}"
+          filename = File.basename("#{gif}")
+          basename = File.basename("#{gif}", ".gif")
+          `convert /home/lee/src/eyebleach/test_images/#{filename} /home/lee/src/eyebleach/test_images/#{basename}-frame%01d.gif`
           imageCount = imageCount + 1
         end
       end
