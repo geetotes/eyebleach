@@ -77,4 +77,8 @@ Eyebleach::Application.configure do
 
   # Use default logging formatter so that PID and timestamp are not suppressed.
   config.log_formatter = ::Logger::Formatter.new
+
+  WebsocketRails.setup do |config|
+      config.standalone = true
+  end
 end
