@@ -67,16 +67,19 @@ class Tv.Controller
   nextFrame: (message) =>
     #console.log("Total frames: " + message.total_frames + " length of dom: " + $('.frame').length)
     #keep from the dom overfilling with frames
-    while($('.frame').length > (message.total_frames))
-      $('.frame').first().remove()
+    while($('#' + message.chanel_name + ' .frame').length > (message.total_frames))
+      $('#' + message.channel_name + ' .frame').first().remove()
 
     frame = @frameTemplate(message)
-    $('#tv').append frame
-    #get the frame number
-    #@frame_no = $('.frame').first().data('frame_no')
-    #then increment
+
+#check for existing channel container
+    
+    if ($('#tv').children('.' + message.channel_name).length == 0)
+      $('#tv').append('<div id="' + message.channel_name '"></div>')
+
+    $('#tv').children('#' + message.channel_name).append frame
+
     @frame_no = message.frame_no + 1
-#do i want to send a frame rendered event? No, I just need to wait for all this stuff to clear up
     @dispatcher.trigger 'next_frame', {frame_no: @frame_no, channel_name: @currentChannel}
 
   appendMessage: (message) =>
