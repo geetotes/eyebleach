@@ -31,14 +31,19 @@ class Tv.Controller
     @dispatcher.bind 'channel_list', @setChannelList
     $('.channel').bind 'click', @changeChannel
 
+
+#should set up the frame trigger and checks here?
+
   drawChannelInfo: (message) =>
     channelTemplate = @template(message)
 
+  #this seems to be out true binding thing from server
   setChannelList: (message) =>
     @channelList = message.channels
-    @currentChannel = @channelList[0]
-    @dispatcher.trigger 'next_frame', {frame_no: 0, channel_name: @currentChannel}
-    console.log('user created')
+    @currentChannel = @channelList[1]
+    @frame_no = 0
+
+    @dispatcher.trigger 'next_frame', {frame_no: @frame_no, channel_name: @currentChannel}
 
   changeChannel: (event) =>
     event.preventDefault()
@@ -47,27 +52,32 @@ class Tv.Controller
       @currentChannel = @channelList[0]
     else
       @currentChannel = @channelList[index + 1]
+    @frame_no = 0
     #clear every thing out
-    $('.frame').remove()
-    @dispatcher.trigger 'next_frame', {frame_no: 0, channel_name: @currentChannel}
-#change channel client side, reset fame number (just dispatch the event)
+    $('#tv').html('')
+    setTimeout ->
+      console.log('waiting')
+    ,1000
+
+    #console.log($('.frame').length)
+    #@dispatcher.trigger 'next_frame', {frame_no: 0, channel_name: @currentChannel}
+    #change channel client side, reset fame number (just dispatch the event, dispatching the event does not work; need to find a way to send frame 0 to socket)
 
 
   nextFrame: (message) =>
-    console.log(message.total_frames)
+    #console.log("Total frames: " + message.total_frames + " length of dom: " + $('.frame').length)
     #keep from the dom overfilling with frames
-    
-    while($('.frame').length > message.total_frames)
+    while($('.frame').length > (message.total_frames))
       $('.frame').first().remove()
-    #if ($('.frame').length == 146)
-      #$('.frame').remove()
+
     frame = @frameTemplate(message)
     $('#tv').append frame
     #get the frame number
-    frame_no = $('.frame').first().data('frame_no')
+    #@frame_no = $('.frame').first().data('frame_no')
     #then increment
-    frame_no = message.frame_no + 1
-    @dispatcher.trigger 'next_frame', {frame_no: frame_no, channel_name: @currentChannel}
+    @frame_no = message.frame_no + 1
+#do i want to send a frame rendered event? No, I just need to wait for all this stuff to clear up
+    @dispatcher.trigger 'next_frame', {frame_no: @frame_no, channel_name: @currentChannel}
 
   appendMessage: (message) =>
     console.log(message)

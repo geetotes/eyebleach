@@ -7,14 +7,29 @@ class TvController < WebsocketRails::BaseController
   end
 
   def create_channel_list
-    @channels = []
+    @channels = {}
     Dir.foreach('/home/lee/src/eyebleach/test_images/') do |filename|
       if filename.match(/[a-z].gif/) != nil #no digits!!!
-        @channels << File.basename("/home/lee/src/eyebleach/test_images/#{filename}", '.gif')
+        @channels[File.basename("/home/lee/src/eyebleach/test_images/#{filename}", '.gif')] = 0
       end
     end
     #lets make our lists
   end
+
+  def do_frame_lookup
+    @channels.each_key do |channel|
+      #re = Regexp.new("#{channel}\d")
+      totalFrames = -1
+      Dir.foreach('/home/lee/src/eyebleach/test_images/') do |filename|
+        if filename.match(/#{channel}\d*/) != nil
+          totalFrames += 1
+        end
+      end
+      @channels[channel] = totalFrames
+    end
+  end
+          
+
 
   def frame_message(ev, msg, frame_no, total_frames, channel_name)
     broadcast_message ev, { 
@@ -33,19 +48,26 @@ class TvController < WebsocketRails::BaseController
 
   #needs to take frame num as param
   def next_frame
-    #we should also look at channel number
+    #populate our @channels instance vaiable
+    create_channel_list
+    do_frame_lookup
+
     if File.exist?("/home/lee/src/eyebleach/test_images/#{message[:channel_name]}#{message[:frame_no]}.gif")
       image = Base64.encode64(File.open("/home/lee/src/eyebleach/test_images/#{message[:channel_name]}#{message[:frame_no]}.gif").read)
-      frame_message :next_frame, image, message[:frame_no], 72, 'kitty'
+      frame_message :next_frame, image, message[:frame_no], @channels[message[:channel_name]], message[:channel_name]
     else
       image = Base64.encode64(File.open("/home/lee/src/eyebleach/test_images/#{message[:channel_name]}0.gif").read)
-      frame_message :next_frame, image, 0, 72, 'kitty'
+      frame_message :next_frame, image, 0, @channels[message[:channel_name]], message[:channel_name]
     end
   end
 
   def get_channels
     create_channel_list
-    channel_list :channel_list, @channels
+    chan_list = []
+    @channels.each_key do |channel|
+      chan_list << channel
+    end
+    channel_list :channel_list, chan_list
   end
 
   def change_channel
